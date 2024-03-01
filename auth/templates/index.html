@@ -16,55 +16,12 @@
   </head>
   <body>
     <h1>Hello World</h1>
-
-    {% if signin %}
-
-    <form action="" method="post" novalidate>
-      {% csrf_token %} 
-      {% if form.non_field_errors %} {% for error in form.non_field_errors %}
-      <p clsss="error">{{error}}</p>
-      {% endfor %} 
-      {% endif %} 
-      
-      {% for fm in form %} {{fm.label_tag}} {{fm}}
-      {{fm.errors|striptags}}<br />
-
-      {% endfor %}
-
-      <input type="submit" />
-    </form>
-    {% if messages %} {% for message in messages %}
-    <small {% if message.tags %} class="{{message.tags}}" {% endif %}>
-      {{message}}
-    </small>
-    {% endfor %} {% endif %} {% else %}
-
-    <form action="" method="post" novalidate>
-      {% csrf_token %} 
-      
-      {% if form.non_field_errors %} 
-      
-      {% for error in form.non_field_errors %}
-
-      <p clsss="error">{{error}}</p>
-
-      {% endfor %}
-      
-      {% endif %}
-
-       {% for fm in form %} {{fm.label_tag}} {{fm}}
-      {{fm.errors|striptags}}<br>
-
-      {% endfor %}
-
-      <input type="submit" value="LogIN"/>
-    </form>
-    {% if messages %} {% for message in messages %}
-    <small {% if message.tags %} class="{{message.tags}}" {% endif %}>
-      {{message}}
-    </small>
-    {% endfor %} {% endif %}
+    <a href="/signup/"><h3>Sign_up</h3></a>
+    <a href="/login/"><h3>Sign_in</h3></a>
     
-    {% endif %}
+
+
+
+  
   </body>
 </html>

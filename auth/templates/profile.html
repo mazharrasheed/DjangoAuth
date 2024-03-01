@@ -10,9 +10,16 @@
 
     {% if messages %} {% for message in messages %}
     <small {% if message.tags %} class="{{message.tags}}" {% endif %}>
-      <h2> Welcome {{message}}</h2>
+      <h2> Welcome {{name}} {{message}}</h2>
     </small>
-    {% endfor %} {% endif %}
+    {% endfor %} 
+    {% else %}
+    <h2> Welcome {{name}}
+    {% endif %}
+
+    <a href="/logout/"><h3>Logout</h3></a>
+    <a href="/changepass/"><h3>Chanage Password</h3></a>
+    <a href="/changepass1/"><h3>Set Password</h3></a>
 
 </body>
 </html>
