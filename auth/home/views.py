@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 
-from .forms import EditUserPrifoleForm, SignUp
+from .forms import AdminUserPrifoleForm, EditUserPrifoleForm, SignUp
 
 # Create your views here.
 
@@ -18,7 +18,6 @@ def index(request):
        pass
     else:
         pass
-
     data={}
     return render(request,"index.html",data)
 
@@ -55,11 +54,18 @@ def Log_in(request):
 
 def profile(request):
     if request.user.is_authenticated:
-     
-        form=EditUserPrifoleForm(instance=request.user)
-        userdata=User.objects.get(username=request.user)
-        name=request.user
-        data={'name':name,'form':form,'userdata':userdata}
+        data={}
+        name=None
+        form=None
+        if request.user.is_superuser==True:
+            name=request.user
+            form=AdminUserPrifoleForm(instance=request.user)
+            pass
+        else:
+            name=request.user
+            form=EditUserPrifoleForm(instance=request.user)
+
+        data={'name':name,'form':form}
         return render(request,"profile.html",data)
     else:
         return redirect("login")
@@ -68,24 +74,35 @@ def editprofile(request):
     if request.user.is_authenticated:
         name=None
         if request.method=="POST":
-            form=EditUserPrifoleForm(request.POST,instance=request.user)
-            form.is_valid()
-            messages.success(request,"Your profile Edit successfuly")
-            form.save()
-            name=request.user
-            return redirect('profile')
+
+            if request.user.is_superuser==True:
+                form=AdminUserPrifoleForm(request.POST,instance=request.user)
+                form.is_valid()
+                messages.success(request,"Your profile Edit successfuly")
+                form.save()
+                name=request.user
+                return redirect('profile')
+            else:
+                form=EditUserPrifoleForm(request.POST,instance=request.user)
+                form.is_valid()
+                messages.success(request,"Your profile Edit successfuly")
+                form.save()
+                name=request.user
+                return redirect('profile')
         else: 
-            form=EditUserPrifoleForm(instance=request.user)
-            name=request.user
-            editprofile=True
+            if request.user.is_superuser==True:
+                name=request.user
+                form=AdminUserPrifoleForm(instance=request.user)
+                editprofile=True
+            else:
+                form=EditUserPrifoleForm(instance=request.user)
+                name=request.user
+                editprofile=True
         data={'name':name,'form':form,'editprofile':editprofile}
         return render(request,"profile.html",data)
     else:
         return redirect("login")
 
-
-
-    
 def log_out(request):
 
     logout(request)

@@ -13,5 +13,13 @@ class EditUserPrifoleForm(UserChangeForm):
     password=None
     class Meta:
         model=User
-        fields=['username','first_name','last_name','email',]
+        fields=['username','first_name','last_name','email','is_staff']
+        labels={'email':'Email'}
+
+class AdminUserPrifoleForm(UserChangeForm):
+    
+    password=None
+    class Meta:
+        model=User
+        fields='__all__'
         labels={'email':'Email'}
