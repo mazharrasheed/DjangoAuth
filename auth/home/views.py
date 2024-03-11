@@ -54,18 +54,35 @@ def Log_in(request):
 
 def profile(request):
     if request.user.is_authenticated:
-        data={}
-        name=None
-        form=None
-        if request.user.is_superuser==True:
-            name=request.user
-            form=AdminUserPrifoleForm(instance=request.user)
-            pass
-        else:
-            name=request.user
-            form=EditUserPrifoleForm(instance=request.user)
+       
+        if request.method=="POST":
 
-        data={'name':name,'form':form}
+            if request.user.is_superuser==True:
+                form=AdminUserPrifoleForm(request.POST,instance=request.user)
+                form.is_valid()
+                messages.success(request,"Your profile Edit successfuly")
+                form.save()
+                name=request.user
+                return redirect('profile')
+            else:
+                form=EditUserPrifoleForm(request.POST,instance=request.user)
+                form.is_valid()
+                messages.success(request,"Your profile Edit successfuly")
+                form.save()
+                name=request.user
+                return redirect('profile')
+        else: 
+            if request.user.is_superuser==True:
+                name=request.user
+                form=AdminUserPrifoleForm(instance=request.user)
+                editprofile=True
+                users=User.objects.all()
+            else:
+                users=None
+                form=EditUserPrifoleForm(instance=request.user)
+                name=request.user
+                editprofile=True
+        data={'name':name,'form':form,'editprofile':editprofile,'users':users}
         return render(request,"profile.html",data)
     else:
         return redirect("login")
@@ -125,6 +142,7 @@ def change_pass(request):
         return redirect("login")
     
 def set_pass(request):
+
     if request.user.is_authenticated:
         if request.method=='POST':
             form=SetPasswordForm(user=request.user,data=request.POST)
@@ -139,3 +157,13 @@ def set_pass(request):
         return render(request,'changepass1.html',data1)
     else:
         return redirect("login")
+
+def user_detail(request,id):
+    if request.user.is_authenticated:
+        ud=User.objects.get(id=id)
+        form=AdminUserPrifoleForm(instance=ud)
+
+        data={'form':form}
+        return render(request,'userdetail.html',data)
+    else:
+        return redirect('login')

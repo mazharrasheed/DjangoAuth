@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row m-5 border rounded">
+
+    <h1 class="m-5">User Detail Page</h1>
+
+    
+  <div class="col-6 border rounded p-4 m-4 ">
+
+    <form action="" method="POST" id="officeform" novalidate>
+      {%csrf_token%}
+      {% if form.non_field_errors %}
+      {% for error in form.non_field_errors %}
+      <p>{{error}}</p>
+      {% endfor %}
+      {% endif %}
+      {% for fm in form %}
+      {{fm.label_tag}} {{fm}} {{fm.errors|striptags}} <br> <br>
+      {% endfor %}
+      <input class='btn btn-info' type="submit" value="Save" />
+    </form>
+  </div>
+  <a href="/logout/">
+    <h3>Logout</h3>
+  </a>
+  <a href="/profile/">
+    <h3>Profile</h3>
+  </a>
+
+  </div>
+{% endblock content %}
+
+

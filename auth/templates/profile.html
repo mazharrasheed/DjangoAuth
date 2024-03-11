@@ -5,8 +5,6 @@
 
   <div class="row m-5 border rounded">
 
-
-   
       <h1 class="m-5">This is profile page</h1>
 
       {% if messages %} {% for message in messages %}
@@ -15,12 +13,18 @@
       </small>
       {% endfor %}
       {% else %}
-      <h2 class="m-5"> Welcome {{name}}
+      <h2 class="m-2"> Welcome {{name}}</h2>
       {% endif %}
-   
 
+      {% if users != None %}
+      <h2 class="m-2"> All Users {{name}}</h2>
+      
+      {% for x in users  %}
+       <h3><a href="{% url 'userdetail' x.id %}"><li> {{x}}</li></a> </h3>
+      {% endfor %}
+      {% endif %}
+      
     <div class="col-6 border rounded p-4 m-4 ">
-
 
       <form action="" method="POST" id="officeform" novalidate>
         {%csrf_token%}
