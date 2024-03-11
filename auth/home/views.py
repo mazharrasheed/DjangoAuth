@@ -1,10 +1,14 @@
-from django.shortcuts import render ,redirect
-from django.http import HttpResponseRedirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm,SetPasswordForm
-from django.contrib.auth import authenticate ,login,logout,update_session_auth_hash
 from django.contrib import messages
-from .forms import SignUp
+from django.contrib.auth import (authenticate, login, logout,
+                                 update_session_auth_hash)
+from django.contrib.auth.forms import (AuthenticationForm, PasswordChangeForm,
+                                       SetPasswordForm, UserChangeForm,
+                                       UserCreationForm)
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+
+from .forms import EditUserPrifoleForm, SignUp
 
 # Create your views here.
 
@@ -25,10 +29,8 @@ def sign_up(request):
         if form.is_valid():
             form.save()
             messages.success(request,"account created succesfuly !!")
-
     else:
         form=SignUp()
-
     data={'form':form}
     return render(request,"signup.html",data)
 
@@ -53,12 +55,36 @@ def Log_in(request):
 
 def profile(request):
     if request.user.is_authenticated:
+     
+        form=EditUserPrifoleForm(instance=request.user)
+        userdata=User.objects.get(username=request.user)
         name=request.user
-        data={'name':name}
-        print(name)
+        data={'name':name,'form':form,'userdata':userdata}
         return render(request,"profile.html",data)
     else:
         return redirect("login")
+
+def editprofile(request):
+    if request.user.is_authenticated:
+        name=None
+        if request.method=="POST":
+            form=EditUserPrifoleForm(request.POST,instance=request.user)
+            form.is_valid()
+            messages.success(request,"Your profile Edit successfuly")
+            form.save()
+            name=request.user
+            return redirect('profile')
+        else: 
+            form=EditUserPrifoleForm(instance=request.user)
+            name=request.user
+            editprofile=True
+        data={'name':name,'form':form,'editprofile':editprofile}
+        return render(request,"profile.html",data)
+    else:
+        return redirect("login")
+
+
+
     
 def log_out(request):
 

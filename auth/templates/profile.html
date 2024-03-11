@@ -1,25 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>This is profile page</h1>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-    {% if messages %} {% for message in messages %}
-    <small {% if message.tags %} class="{{message.tags}}" {% endif %}>
-      <h2> Welcome {{name}} {{message}}</h2>
-    </small>
-    {% endfor %} 
+
+{% block content %}
+<h1>This is profile page</h1>
+
+{% if messages %} {% for message in messages %}
+<small {% if message.tags %} class="{{message.tags}}" {% endif %}>
+  <h2> Welcome {{name}} {{message}}</h2>
+</small>
+{% endfor %}
+{% else %}
+<h2> Welcome {{name}}
+  {% endif %}
+
+  <div class="row m-5">
+
+    {% if editprofile %}
+    <div class="col-6 border rounded p-4 m-4 ">
+      <form action="" method="POST" id="officeform" novalidate>
+        {%csrf_token%}
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p>{{error}}</p>
+        {% endfor %}
+        {% endif %}
+        {% for fm in form %}
+        {{fm.label_tag}} {{fm}} {{fm.errors|striptags}} <br> <br>
+        {% endfor %}
+        <input class='btn btn-info' type="submit" value="Save" />
+      </form>
+      <a href="/changepass/">
+        <h3>Chanage Password</h3>
+      </a>
+      <a href="/changepass1/">
+        <h3>Set Password</h3>
+      </a>
+    </div>
     {% else %}
-    <h2> Welcome {{name}}
+
+    <div class="col-6 border rounded p-4 m-4 ">
+      <p>User Name: {{userdata.username}}</p>
+      <p>First Name: {{userdata.first_name|title}}</p>
+      <p>Last Name: {{userdata.last_name|title}}</p>
+      <p>Email: {{userdata.email}}</p>
+      <a href="/editprofile/">
+        <h3>Edit</h3>
+      </a>
+    </div>
     {% endif %}
+    <div class="col-6 border rounded p-4 m-4 ">
+      <a href="/logout/">
+        <h3>Logout</h3>
+      </a>
+      <a href="/">
+        <h3>Home</h3>
+      </a>
+    </div>
+  </div>
 
-    <a href="/logout/"><h3>Logout</h3></a>
-    <a href="/changepass/"><h3>Chanage Password</h3></a>
-    <a href="/changepass1/"><h3>Set Password</h3></a>
-
-</body>
-</html>
+  {% endblock content %}
